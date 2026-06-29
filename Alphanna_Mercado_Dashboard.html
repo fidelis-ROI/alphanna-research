@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alphanna — Análise de Mercado 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#2E5E4E;--g2:#3D7A66;--g3:#5A9E7E;--gd:#EBF4EF;
+  --au:#C9A227;--aul:#FBF5E6;--aum:#9A7A1A;
+  --bg:#F3F6F4;--card:#FFFFFF;
+  --t1:#1A2820;--t2:#3D5048;--t3:#6B8078;--t4:#A0B0AA;
+  --sh:0 2px 18px rgba(30,70,50,.09);--r:14px;--gap:18px;
+}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--t1);font-size:14px;line-height:1.5}
+
+/* ── Header ─────────────────────────────────────────────────── */
+header{background:var(--g);padding:30px 48px 24px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.logo{color:#fff;font-size:27px;font-weight:800;letter-spacing:-.5px}
+.logo em{display:block;color:#F0C84A;font-style:italic;font-weight:300;font-size:13px;margin-top:1px}
+.hdr-right{text-align:right;color:rgba(255,255,255,.6);font-size:11px;line-height:1.9}
+
+/* ── Layout ──────────────────────────────────────────────────── */
+main{max-width:1300px;margin:0 auto;padding:32px 28px 60px}
+.sec-tag{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--g);margin-bottom:4px}
+.sec-head{font-size:19px;font-weight:700;color:var(--t1);margin-bottom:18px}
+.card{background:var(--card);border-radius:var(--r);padding:24px 26px;box-shadow:var(--sh)}
+.two-col{display:grid;grid-template-columns:1fr 1.15fr;gap:var(--gap);margin-bottom:var(--gap)}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);margin-bottom:var(--gap)}
+.mb{margin-bottom:var(--gap)}
+.chart-wrap{position:relative}
+
+/* ── KPI Row ─────────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);margin-bottom:var(--gap)}
+.kpi{background:var(--card);border-radius:var(--r);padding:22px 24px;box-shadow:var(--sh);border-top:5px solid var(--g)}
+.kpi.gold{border-color:var(--au)}
+.kpi.sage{border-color:var(--g3)}
+.kpi-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3)}
+.kpi-sam{font-size:28px;font-weight:800;color:var(--g);line-height:1.1;margin:6px 0 2px}
+.kpi.gold .kpi-sam{color:var(--aum)}
+.kpi.sage .kpi-sam{color:var(--g3)}
+.kpi-sub{font-size:11px;color:var(--t3);margin-bottom:10px}
+.kpi-divider{border:none;border-top:1px dashed #D5E5DC;margin:10px 0}
+.kpi-som-row{display:flex;justify-content:space-between;align-items:baseline}
+.kpi-som-lbl{font-size:10px;color:var(--t3);font-weight:600}
+.kpi-som-val{font-size:18px;font-weight:800;color:var(--g)}
+.kpi.gold .kpi-som-val{color:var(--aum)}
+.kpi.sage .kpi-som-val{color:var(--g3)}
+.kpi-som-sub{font-size:10px;color:var(--t4);margin-top:2px}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--gd);color:var(--g)}
+.badge.gb{background:var(--aul);color:var(--aum)}
+
+/* ── Definitions ─────────────────────────────────────────────── */
+.defs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:26px}
+.def{border-radius:10px;padding:14px 16px;border-left:5px solid transparent}
+.def-tam{background:#EBF4EF;border-color:var(--g)}
+.def-sam{background:#FBF5E6;border-color:var(--au)}
+.def-som{background:#EDF6F1;border-color:var(--g3)}
+.def-title{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:2px}
+.def-tam .def-title{color:var(--g)}
+.def-sam .def-title{color:var(--aum)}
+.def-som .def-title{color:var(--g3)}
+.def-full{font-size:11px;font-weight:600;color:var(--t2);margin-bottom:4px}
+.def-desc{font-size:11px;color:var(--t3);line-height:1.5}
+
+/* ── Donuts ──────────────────────────────────────────────────── */
+.donuts{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);margin-bottom:var(--gap)}
+.donut-card{background:var(--card);border-radius:var(--r);padding:22px 18px;box-shadow:var(--sh);text-align:center}
+.donut-title{font-size:14px;font-weight:700;margin-bottom:10px}
+.donut-wrap{position:relative;width:170px;height:170px;margin:0 auto 14px}
+.dc{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;width:100px}
+.dc-lbl{font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t4)}
+.dc-pct{font-size:11px;font-weight:800;color:var(--g3);margin:1px 0}
+.dc-val{font-size:12px;font-weight:700;color:var(--t2)}
+.dleg{display:flex;flex-direction:column;gap:5px;text-align:left}
+.dleg-row{display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.dleg-name{display:flex;align-items:center;gap:5px;font-weight:600;color:var(--t2)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dleg-r{text-align:right}
+.dleg-v{font-weight:700;color:var(--t1);font-size:11px}
+.dleg-p{font-size:9px;color:var(--t4)}
+
+/* ── Funil ───────────────────────────────────────────────────── */
+.tabs{display:flex;gap:4px;margin-bottom:14px}
+.tab{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:all .2s;background:var(--gd);color:var(--g)}
+.tab.active{background:var(--g);color:#fff}
+.funnel-row{margin-bottom:7px}
+.f-lbl{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--t2);margin-bottom:3px}
+.f-n{font-weight:800}
+.f-track{background:#EDF2EF;border-radius:7px;height:22px;overflow:hidden}
+.f-bar{height:100%;border-radius:7px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:700;color:#fff;transition:width .6s ease}
+.f-note{font-size:10px;color:var(--t4);font-style:italic;margin-top:9px;line-height:1.5}
+
+/* ── SOM Projeção ─────────────────────────────────────────────── */
+.som-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);margin-bottom:20px}
+.som-card{border-radius:12px;padding:20px;text-align:center;border:2px solid transparent}
+.som-pt{background:var(--gd);border-color:#B5D9C8}
+.som-ib{background:var(--aul);border-color:#E8D090}
+.som-eu{background:#EDF6F1;border-color:#A5D4BC}
+.som-geo{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;color:var(--t3)}
+.som-val{font-size:30px;font-weight:800;line-height:1;margin-bottom:4px}
+.som-pt .som-val{color:var(--g)}
+.som-ib .som-val{color:var(--aum)}
+.som-eu .som-val{color:var(--g2)}
+.som-icp{font-size:12px;color:var(--t3);margin-bottom:6px}
+.som-month{font-size:11px;font-weight:600;color:var(--t2)}
+.som-note{font-size:10px;color:var(--t4);margin-top:3px;font-style:italic}
+
+/* ── Nota base sensibilidade ─────────────────────────────────── */
+.base-badge{display:inline-block;background:var(--gd);color:var(--g);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle}
+.chart-note{font-size:10px;color:var(--t4);font-style:italic;margin-top:10px;line-height:1.5}
+
+/* ── References ──────────────────────────────────────────────── */
+.refs-card{background:var(--card);border-radius:var(--r);padding:26px 28px;box-shadow:var(--sh);margin-bottom:var(--gap)}
+.refs-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 32px;margin-top:18px}
+.ref-group h4{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid var(--gd)}
+.ref-item{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start}
+.ref-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--gd);color:var(--g);font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.ref-body{}
+.ref-source{font-size:11px;font-weight:700;color:var(--t1)}
+.ref-detail{font-size:10px;color:var(--t3);margin-top:1px;line-height:1.4}
+.ref-tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;margin-top:2px;letter-spacing:.5px}
+.tag-market{background:#E8F3ED;color:#2E5E4E}
+.tag-demo{background:#FBF5E6;color:#9A7A1A}
+.tag-ecom{background:#EDF6F1;color:#3D7A66}
+.tag-comp{background:#F3EDF8;color:#6B3EA0}
+.disclaimer{background:#FBF5E6;border:1px solid #E8D090;border-radius:10px;padding:14px 16px;margin-top:16px;font-size:11px;color:var(--aum);line-height:1.6}
+
+footer{text-align:center;padding:20px;font-size:11px;color:var(--t4);border-top:1px solid #DDE8E2;margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────── -->
+<header>
+  <div>
+    <div class="logo">ALPHANNA <em>inspiration & creation</em></div>
+    <div style="margin-top:7px;font-size:11px;color:rgba(255,255,255,.6)">Suplementação Feminina · E-commerce D2C · Projeções SOM 2,5% · Junho 2026</div>
+  </div>
+  <div class="hdr-right">Portugal · Ibéria · Europa Completa<br>Análise de Mercado Estratégica</div>
+</header>
+
+<main>
+
+<!-- ── KPI Cards ────────────────────────────────────────────────── -->
+<div class="kpi-grid" style="margin-top:30px">
+
+  <div class="kpi">
+    <div class="kpi-lbl">Cenário — Portugal</div>
+    <div class="kpi-sam">10,7 M€</div>
+    <div class="kpi-sub">SAM · ~107k mulheres ICP</div>
+    <hr class="kpi-divider">
+    <div class="kpi-som-row">
+      <div>
+        <div class="kpi-som-lbl">SOM a 2,5% do SAM</div>
+        <div class="kpi-som-val">267 mil €</div>
+        <div class="kpi-som-sub">~2.683 clientes ativas · ~22 mil €/mês</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi gold">
+    <div class="kpi-lbl">Cenário — Ibéria (PT+ES)</div>
+    <div class="kpi-sam">70,9 M€</div>
+    <div class="kpi-sub">SAM · ~709k mulheres ICP</div>
+    <hr class="kpi-divider">
+    <div class="kpi-som-row">
+      <div>
+        <div class="kpi-som-lbl">SOM a 2,5% do SAM</div>
+        <div class="kpi-som-val">1,77 M€</div>
+        <div class="kpi-som-sub">~17.719 clientes ativas · ~148 mil €/mês</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi sage">
+    <div class="kpi-lbl">Cenário — Europa Completa</div>
+    <div class="kpi-sam">798 M€</div>
+    <div class="kpi-sub">SAM · ~7,9M mulheres ICP</div>
+    <hr class="kpi-divider">
+    <div class="kpi-som-row">
+      <div>
+        <div class="kpi-som-lbl">SOM a 2,5% do SAM</div>
+        <div class="kpi-som-val">19,95 M€</div>
+        <div class="kpi-som-sub">~199.625 clientes ativas · ~1,66 M€/mês</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Definições TAM / SAM / SOM ──────────────────────────────── -->
+<div class="sec-tag">Glossário</div>
+<div class="sec-head" style="margin-bottom:12px">O que significam TAM, SAM e SOM</div>
+<div class="defs mb">
+  <div class="def def-tam">
+    <div class="def-title">TAM — Total Addressable Market</div>
+    <div class="def-full">Mercado Total Endereçável</div>
+    <div class="def-desc">O bolo total do mercado de suplementos do país/região, incluindo todos os canais, perfis e produtos. <strong>É o teto teórico — nunca se atinge na totalidade.</strong></div>
+  </div>
+  <div class="def def-sam">
+    <div class="def-title">SAM — Serviceable Addressable Market</div>
+    <div class="def-full">Mercado Endereçável Servível</div>
+    <div class="def-desc">A fatia do TAM que a Alphanna consegue efectivamente servir: <strong>mulheres 25–54 anos, urbanas, classe média/alta, que compram online e consomem suplementos.</strong></div>
+  </div>
+  <div class="def def-som">
+    <div class="def-title">SOM — Serviceable Obtainable Market</div>
+    <div class="def-full">Mercado Obtível Servível</div>
+    <div class="def-desc">A fatia do SAM <strong>realisticamente captável</strong> dados os recursos e execução. Neste dashboard: <strong>2,5% do SAM</strong> para todos os cenários, como métrica unificada de projeção.</div>
+  </div>
+</div>
+
+<!-- ── Donuts ────────────────────────────────────────────────────── -->
+<div class="sec-tag">Dimensionamento</div>
+<div class="sec-head">TAM · SAM · SOM por cenário geográfico <span style="font-size:12px;font-weight:400;color:var(--t3)">(SOM = 2,5% do SAM)</span></div>
+<p style="font-size:11px;color:var(--t3);margin-bottom:14px;font-style:italic">Anel exterior = TAM (total do mercado); anel do meio = SAM como % do TAM; anel interior = SOM como % do SAM (2,5%). As proporções são reais — a fatia do SAM/SOM é intencional e honesta sobre a dimensão do nicho.</p>
+
+<div class="donuts">
+  <div class="donut-card">
+    <div class="donut-title">🇵🇹 Portugal</div>
+    <div class="donut-wrap"><canvas id="d-pt"></canvas>
+      <div class="dc"><div class="dc-lbl">SOM 2,5%</div><div class="dc-pct">267 mil €</div><div class="dc-val">~2.683 clientes</div></div>
+    </div>
+    <div class="dleg">
+      <div class="dleg-row"><span class="dleg-name"><span class="dot" style="background:#2E5E4E"></span>TAM</span><div class="dleg-r"><div class="dleg-v">647 M€</div></div></div>
+      <div class="dleg-row"><span class="dleg-name"><span class="dot" style="background:#C9A227"></span>SAM</span><div class="dleg-r"><div class="dleg-v">10,7 M€</div><div class="dleg-p">1,65% do TAM</div></div></div>
+      <div class="dleg-row"><span class="dleg-name"><span class="dot" style="background:#5A9E7E"></span>SOM (2,5%)</span><div class="dleg-r"><div class="dleg-v">267 mil €</div><div class="dleg-p">0,04% do TAM</div></div></div>
+    </div>
+  </div>
+
+  <div class="donut-card">
+    <div class="donut-title">🇵🇹🇪🇸 Ibéria</div>
+    <div class="donut-wrap"><canvas id="d-ib"></canvas>
+      <div class="dc"><div class="dc-lbl">SOM 2,5%</div><div class="dc-pct">1,77 M€</div><div class="dc-val">~17.719 clientes</div></div>
+    </div>
+    <div class="dleg">
+      <div class="dleg-row"><span class="dleg-name"><span class="dot" style="background:#2E5E4E"></span>TAM</span><div class="dleg-r"><div class="dleg-v">2,3 mil M€</div></div></div>
+      <div class="dleg-row"><span class="dleg-name"><span class="dot" style="background:#C9A227"></span>SAM</span><div class="dleg-r"><div class="dleg-v">70,9 M€</div><div class="dleg-p">3,0% do TAM</div></div></div>
+      <div class="dleg-row"><span class="dleg-name"><span class="dot" style="background:#5A9E7E"></span>SOM (2,5%)</span><div class="dleg-r"><div class="dleg-v">1,77 M€</div><div class="dleg-p">0,08% do TAM</div></div></div>
+    </div>
+  </div>
+
+  <div class="donut-card">
+    <div class="donut-title">🌍 Europa Completa</div>
+    <div class="donut-wrap"><canvas id="d-eu"></canvas>
+      <div class="dc"><div class="dc-lbl">SOM 2,5%</div><div class="dc-pct">19,95 M€</div><div class="dc-val">~199.625 clientes</div></div>
+    </div>
+    <div class="dleg">
+      <div class="dleg-row"><span class="dleg-name"><span class="dot" style="background:#2E5E4E"></span>TAM</span><div class="dleg-r"><div class="dleg-v">24,5 mil M€</div></div></div>
+      <div class="dleg-row"><span class="dleg-name"><span class="dot" style="background:#C9A227"></span>SAM</span><div class="dleg-r"><div class="dleg-v">798 M€</div><div class="dleg-p">3,3% do TAM</div></div></div>
+      <div class="dleg-row"><span class="dleg-name"><span class="dot" style="background:#5A9E7E"></span>SOM (2,5%)</span><div class="dleg-r"><div class="dleg-v">19,95 M€</div><div class="dleg-p">0,08% do TAM</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Funil + Mercado Europeu ────────────────────────────────── -->
+<div class="two-col">
+  <div class="card">
+    <div class="sec-tag">Funil de Cliente Ideal (ICP)</div>
+    <div class="sec-head" style="font-size:15px;margin-bottom:12px">De mulheres totais às consumidoras-alvo</div>
+    <div class="tabs">
+      <div class="tab active" onclick="setFunnel('pt',this)">🇵🇹 Portugal</div>
+      <div class="tab" onclick="setFunnel('ib',this)">🇵🇹🇪🇸 Ibéria</div>
+      <div class="tab" onclick="setFunnel('eu',this)">🌍 Europa</div>
+    </div>
+    <div id="funnel-body"></div>
+  </div>
+
+  <div class="card">
+    <div class="sec-tag">TAM por País / Região</div>
+    <div class="sec-head" style="font-size:15px;margin-bottom:12px">Mercado Europeu de Suplementos 2024</div>
+    <div class="chart-wrap" style="height:278px"><canvas id="c-europe"></canvas></div>
+    <p class="chart-note">Itália (Il Sole 24 Ore) · Alemanha (Grand View Research $7,82B) · UK (Grand View Research $4,79B) · França (Ingredients Network €2,9B) · Espanha (DataM Intelligence $1,81B) · Nórdicos e restantes: estimativa proporcional. Conversão 1 USD = 0,92 EUR (média 2024).</p>
+  </div>
+</div>
+
+<!-- ── Projeções SOM 2,5% ─────────────────────────────────────── -->
+<div class="sec-tag">Projeções SOM</div>
+<div class="sec-head">Faturamento projetado a 2,5% do SAM — comparativo por mercado</div>
+
+<div class="som-cards">
+  <div class="som-card som-pt">
+    <div class="som-geo">🇵🇹 Portugal</div>
+    <div class="som-val">267 mil €</div>
+    <div class="som-icp">2.683 clientes ativas</div>
+    <div class="som-month">≈ 22 mil € / mês</div>
+    <div class="som-note">SAM: 10,7 M€ · 2,5% captação</div>
+  </div>
+  <div class="som-card som-ib">
+    <div class="som-geo">🇵🇹🇪🇸 Ibéria (PT+ES)</div>
+    <div class="som-val">1,77 M€</div>
+    <div class="som-icp">17.719 clientes ativas</div>
+    <div class="som-month">≈ 148 mil € / mês</div>
+    <div class="som-note">SAM: 70,9 M€ · 2,5% captação</div>
+  </div>
+  <div class="som-card som-eu">
+    <div class="som-geo">🌍 Europa Completa</div>
+    <div class="som-val">19,95 M€</div>
+    <div class="som-icp">199.625 clientes ativas</div>
+    <div class="som-month">≈ 1,66 M€ / mês</div>
+    <div class="som-note">SAM: 798 M€ · 2,5% captação</div>
+  </div>
+</div>
+
+<div class="card mb">
+  <div class="sec-head" style="font-size:15px;margin-bottom:6px">Evolução do SOM conforme expansão geográfica</div>
+  <p style="font-size:11px;color:var(--t3);margin-bottom:16px">Barras empilhadas mostram a contribuição incremental de cada mercado ao total do SOM (2,5% do SAM de cada fase).</p>
+  <div class="chart-wrap" style="height:200px"><canvas id="c-som-stacked"></canvas></div>
+  <p class="chart-note">
+    <strong>Portugal:</strong> 2,5% × 10,7 M€ = 267 mil € &nbsp;|&nbsp;
+    <strong>Espanha (adicional):</strong> 2,5% × 60,1 M€ = 1,503 M€ &nbsp;|&nbsp;
+    <strong>Europa restante (adicional):</strong> 2,5% × 727 M€ = 18,18 M€ &nbsp;|&nbsp;
+    Ticket médio: 40 € · Frequência: 2,5 compras/ano.
+  </p>
+</div>
+
+<div class="card mb">
+  <div class="sec-head" style="font-size:15px;margin-bottom:6px">Sensibilidade de quota: impacto no faturamento anual</div>
+  <p style="font-size:11px;color:var(--t3);margin-bottom:16px">O que acontece ao SOM se a quota de captação variar entre 0,5% e 5% do SAM, por mercado.</p>
+  <div class="chart-wrap" style="height:200px"><canvas id="c-som-range"></canvas></div>
+  <p class="chart-note">A barra de 2,5% (cenário base adoptado) está destacada. Europa a 5% atingiria 39,9 M€ — potencial máximo teórico a longo prazo.</p>
+</div>
+
+<!-- ── Sensibilidade ao Preço ─────────────────────────────────────── -->
+<div class="card mb">
+  <div class="sec-tag">Sensibilidade ao Preço</div>
+  <div class="sec-head" style="font-size:15px;margin-bottom:5px">
+    Efeito do ticket no público alcançável vs. SAM potencial
+    <span class="base-badge">Base: Portugal</span>
+  </div>
+  <p style="font-size:11px;color:var(--t3);margin-bottom:16px">Análise feita sobre o SAM de Portugal (10,7 M€). Barras = público alcançável (eixo esq.); linha = SAM potencial total em M€ (eixo dir.). O SAM atinge teto aos ~24–28€ e cai a seguir.</p>
+  <div class="chart-wrap" style="height:230px"><canvas id="c-price"></canvas></div>
+  <p class="chart-note">
+    O ticket base de 40€ (Alphanna) é o ponto de equilíbrio. Cortar para 24€ (≈ Frederica) requer <strong>+64% de clientes</strong> para apenas <strong>+22% de SAM potencial</strong> — e margem provavelmente negativa após custos fixos por encomenda (logística, CAC, produto).
+  </p>
+</div>
+
+<!-- ── Referências ─────────────────────────────────────────────── -->
+<div class="refs-card">
+  <div class="sec-tag">Fontes e Referências</div>
+  <div class="sec-head" style="margin-bottom:4px">Base de dados desta análise</div>
+  <p style="font-size:12px;color:var(--t3);margin-bottom:0">Todas as estimativas de mercado e dados demográficos utilizados neste dashboard, com fonte, dado específico extraído e aplicação no modelo.</p>
+
+  <div class="refs-grid">
+
+    <!-- Col 1: Market Reports -->
+    <div class="ref-group">
+      <h4>Relatórios de Mercado</h4>
+
+      <div class="ref-item">
+        <div class="ref-num">1</div>
+        <div class="ref-body">
+          <div class="ref-source">Grand View Research — Portugal Dietary Supplements Market</div>
+          <div class="ref-detail">TAM Portugal 2024: 703,7 M$ (647 M€) · CAGR 7,8% até 2030 · canal offline 84,7% · adultos 62,2% do mercado · penetração suplementos 12,6%→26,8% (2011–2023)</div>
+          <span class="ref-tag tag-market">Mercado PT</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">2</div>
+        <div class="ref-body">
+          <div class="ref-source">IMARC Group — Portugal Dietary Supplements Market</div>
+          <div class="ref-detail">TAM Portugal 2024: 770,6 M$ (709 M€) · projeção 1.665 M$ em 2033 · CAGR 8,0%</div>
+          <span class="ref-tag tag-market">Mercado PT</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">3</div>
+        <div class="ref-body">
+          <div class="ref-source">Ken Research — Portugal Nutrition & Dietary Supplements</div>
+          <div class="ref-detail">TAM ~705 M$ (649 M€) · canal online projetado para ~42% das vendas futuras</div>
+          <span class="ref-tag tag-market">Mercado PT</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">4</div>
+        <div class="ref-body">
+          <div class="ref-source">DataM Intelligence — Spain Food Supplement Market</div>
+          <div class="ref-detail">TAM Espanha 2024: 1.811 M$ (1.665 M€) · e-commerce cresce ~35% ao ano</div>
+          <span class="ref-tag tag-market">Mercado ES</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">5</div>
+        <div class="ref-body">
+          <div class="ref-source">Ken Research — Spain Nutritional & Dietary Supplements</div>
+          <div class="ref-detail">E-commerce ~1,3 mil M€ · 50% dos consumidores 18–34 preferem comprar online</div>
+          <span class="ref-tag tag-market">Mercado ES</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">6</div>
+        <div class="ref-body">
+          <div class="ref-source">Fortune Business Insights — Europe Dietary Supplements Market</div>
+          <div class="ref-detail">TAM Europa 2024: 26,6 mil M$ (24,5 mil M€) · projeção 50,7 mil M$ em 2032 · CAGR 8,45%</div>
+          <span class="ref-tag tag-market">Mercado EU</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">7</div>
+        <div class="ref-body">
+          <div class="ref-source">Il Sole 24 Ore — "Dietary supplements, sales exceed EUR 4 billion"</div>
+          <div class="ref-detail">Itália 2023: vendas ultrapassam €4 mil M€ · e-commerce cresce 16% em 2024, supera €1 mil M€ · farmácia = 78% do valor</div>
+          <span class="ref-tag tag-market">Mercado IT</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">8</div>
+        <div class="ref-body">
+          <div class="ref-source">Statista — Italy Health Supplements Market</div>
+          <div class="ref-detail">Mercado italiano 2024: ~€4,5 mil M€ · líder europeu com ~18–21% do mercado continental</div>
+          <span class="ref-tag tag-market">Mercado IT</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">9</div>
+        <div class="ref-body">
+          <div class="ref-source">Grand View Research — Germany Dietary Supplements Market</div>
+          <div class="ref-detail">TAM Alemanha 2024: 7,82 mil M$ (~7,2 mil M€) · CAGR 9,2% · maior mercado por alguns indicadores</div>
+          <span class="ref-tag tag-market">Mercado DE</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">10</div>
+        <div class="ref-body">
+          <div class="ref-source">Grand View Research — UK Dietary Supplements Market</div>
+          <div class="ref-detail">TAM UK 2024: 4,79 mil M$ (~4,4 mil M€) · CAGR ~10% (mais alto da Europa) · 27% do mercado europeu</div>
+          <span class="ref-tag tag-market">Mercado UK</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">11</div>
+        <div class="ref-body">
+          <div class="ref-source">Ingredients Network — "French supplements market soars beyond €3bn"</div>
+          <div class="ref-detail">França 2025: supera €3 mil M€ (→ 2024: ~€2,9 mil M€) · e-commerce +5% · farmácias +3,7%</div>
+          <span class="ref-tag tag-market">Mercado FR</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">12</div>
+        <div class="ref-body">
+          <div class="ref-source">Ken Research — Netherlands Nutritional & Dietary Supplements</div>
+          <div class="ref-detail">TAM Países Baixos: ~1,5 mil M$ (1,4 mil M€) · alta penetração online</div>
+          <span class="ref-tag tag-market">Mercado NL</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Col 2: Demographics + E-commerce + Methodology -->
+    <div class="ref-group">
+      <h4>Dados Demográficos e E-commerce</h4>
+
+      <div class="ref-item">
+        <div class="ref-num">13</div>
+        <div class="ref-body">
+          <div class="ref-source">OECD / FRED — Labour Force Statistics</div>
+          <div class="ref-detail">Mulheres em idade activa 25–54 em Portugal: 2.106.925 (2024) · base do funil ICP Portugal</div>
+          <span class="ref-tag tag-demo">Demográfico</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">14</div>
+        <div class="ref-body">
+          <div class="ref-source">ONU WPP 2024 — World Population Prospects</div>
+          <div class="ref-detail">Populações nacionais e estimativas por faixa etária: Espanha (~10M mulheres 25–54), Alemanha (~14,5M), UK (~13,8M), França (~12,8M), Itália (~11,5M), Europa Ocidental total ~39,2M</div>
+          <span class="ref-tag tag-demo">Demográfico</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">15</div>
+        <div class="ref-body">
+          <div class="ref-source">Worldometer / ONU — Urbanização por país</div>
+          <div class="ref-detail">Portugal 66% · Espanha 81% · Alemanha 77% · França 81% · UK 84% · Itália 71% · NL 92% · Nórdicos avg 86%</div>
+          <span class="ref-tag tag-demo">Demográfico</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">16</div>
+        <div class="ref-body">
+          <div class="ref-source">Eurostat — E-commerce statistics for individuals (2025)</div>
+          <div class="ref-detail">Compradores online por faixa etária na UE: 25–34 anos = 90% · 35–44 anos = 87% · 45–54 anos = 80% · Mulheres = 51,2% da população EU (191 M pessoas)</div>
+          <span class="ref-tag tag-ecom">E-commerce</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">17</div>
+        <div class="ref-body">
+          <div class="ref-source">CTT / Minerva Insights — E-commerce em Portugal 2025</div>
+          <div class="ref-detail">5,8 M compradores online em Portugal (67,9% pop.) · 75% compram pelo menos 1×/mês · taxa online feminina 64%</div>
+          <span class="ref-tag tag-ecom">E-commerce</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">18</div>
+        <div class="ref-body">
+          <div class="ref-source">Inquérito Nacional de Saúde (INSA) / NLM</div>
+          <div class="ref-detail">Penetração de suplementos em Portugal: 12,6% (2011) → 26,8% (2023) — mais do que duplicou em 12 anos. Usado como filtro final do funil ICP.</div>
+          <span class="ref-tag tag-demo">Saúde PT</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">19</div>
+        <div class="ref-body">
+          <div class="ref-source">Businesscoot — The food supplements market, Italy (2025)</div>
+          <div class="ref-detail">Itália: €4,5 mil M€ em 2024 · farmácia 78% do valor · e-commerce +16% em 2024 · Amazon = 41% das vendas online</div>
+          <span class="ref-tag tag-market">Mercado IT</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">20</div>
+        <div class="ref-body">
+          <div class="ref-source">Euromonitor — Dietary Supplements in Norway</div>
+          <div class="ref-detail">Utilizado para estimativa proporcional dos países nórdicos (SE, DK, NO, FI). TAM combinado estimado: ~€2,0 mil M€.</div>
+          <span class="ref-tag tag-market">Mercado NÓR</span>
+        </div>
+      </div>
+
+      <div class="ref-item">
+        <div class="ref-num">21</div>
+        <div class="ref-body">
+          <div class="ref-source">Mordor Intelligence — Europe Dietary Supplements Market</div>
+          <div class="ref-detail">Europa de Leste: mercado em crescimento acelerado · Polónia e República Checa com CAGR ~12% · estimativa TAM conjunto: ~€1,5 mil M€</div>
+          <span class="ref-tag tag-market">Mercado EU-Este</span>
+        </div>
+      </div>
+
+      <div class="ref-group" style="margin-top:16px">
+        <h4>Premissas do Modelo</h4>
+
+        <div class="ref-item">
+          <div class="ref-num">M1</div>
+          <div class="ref-body">
+            <div class="ref-source">Conversão cambial</div>
+            <div class="ref-detail">1 USD = 0,92 EUR (média 2024) · todos os valores USD convertidos com esta taxa</div>
+            <span class="ref-tag tag-comp">Metodologia</span>
+          </div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">M2</div>
+          <div class="ref-body">
+            <div class="ref-source">Ticket médio e frequência</div>
+            <div class="ref-detail">Ticket médio base: 40 € · Frequência: 2,5 compras/ano por cliente activa · SAM = ICP × ticket × frequência</div>
+            <span class="ref-tag tag-comp">Metodologia</span>
+          </div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">M3</div>
+          <div class="ref-body">
+            <div class="ref-source">Funil ICP — filtros sequenciais</div>
+            <div class="ref-detail">Filtros aplicados sem dupla contagem: urbano × classe média/alta × comprador online × consumidor de suplementos. Taxa de classe média: 45% PT / 45% ES / 50% EU avg.</div>
+            <span class="ref-tag tag-comp">Metodologia</span>
+          </div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">M4</div>
+          <div class="ref-body">
+            <div class="ref-source">SOM uniformizado: 2,5% do SAM</div>
+            <div class="ref-detail">Adoptado como cenário base para todos os mercados a pedido da Alphanna. Nota: captação de 2,5% fora da Ibéria implica superar barreiras de língua, logística e reconhecimento de marca — requer parceiro local e investimento substancial em localização.</div>
+            <span class="ref-tag tag-comp">Metodologia</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ <strong>Aviso de honestidade:</strong> Estimativas baseadas em fontes públicas (relatórios de mercado, OECD, Eurostat, ONU, CTT) referentes a 2024–2026. Os dados de TAM divergem entre fontes (métodos e definições distintos) — adoptámos a fonte mais conservadora como base e sinalizámos variações. Dados estimados (ex.: taxa de classe social por país, penetração de suplementos fora de Portugal) estão assinalados como estimativas. Recomenda-se validar frequência real de recompra e margem de contribuição com dados internos da Alphanna antes de fixar metas orçamentais. A captura de 2,5% do SAM europeu (SOM ~19,95 M€) é um cenário teórico — a execução exige presença local, localização de conteúdo e capital significativo.
+  </div>
+</div>
+
+</main>
+
+<footer>
+  Alphanna · Análise de Mercado Estratégica · Junho 2026 &nbsp;·&nbsp;
+  21 fontes consultadas · Grand View Research · Fortune Business Insights · OECD · Eurostat · Il Sole 24 Ore · Ingredients Network · DataM Intelligence · Ken Research · CTT/Minerva · INSA · ONU WPP 2024
+</footer>
+
+<script>
+// ── Palette ──────────────────────────────────────────────────────────────
+const G='#2E5E4E',G2='#3D7A66',G3='#5A9E7E',AU='#C9A227',GR='#D5D5D5',GR2='#EBEBEB';
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+Chart.defaults.color='#6B8078';
+
+// ── Nested Donut (SOM = 2.5% of SAM for all) ─────────────────────────────
+function makeDonut(id,tam,sam){
+  const sp=sam/tam, rp=0.025; // SOM = 2.5% of SAM
+  new Chart(document.getElementById(id),{
+    type:'doughnut',
+    data:{datasets:[
+      {data:[100],backgroundColor:[G],borderWidth:3,borderColor:'#F3F6F4',hoverOffset:0},
+      {data:[sp*100,(1-sp)*100],backgroundColor:[AU,GR],borderWidth:3,borderColor:'#F3F6F4',hoverOffset:4},
+      {data:[rp*100,(1-rp)*100],backgroundColor:[G3,GR2],borderWidth:3,borderColor:'#F3F6F4',hoverOffset:4},
+    ]},
+    options:{
+      cutout:'30%',rotation:-90,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>{
+          const n=['TAM (100%)','SAM / resto do TAM','SOM 2,5% / resto do SAM'];
+          return ` ${n[c.datasetIndex]??''}: ${c.parsed.toFixed(3)}%`;
+        }}}
+      },
+      animation:{animateRotate:true,duration:1200,easing:'easeInOutQuart'},
+      responsive:true,maintainAspectRatio:true,
+    }
+  });
+}
+makeDonut('d-pt',647,10.7);
+makeDonut('d-ib',2347,70.9);
+makeDonut('d-eu',24500,798);
+
+// ── ICP Funnel ──────────────────────────────────────────────────────────
+const FUNNELS={
+  pt:{steps:[
+    {label:'Mulheres 25–54 em Portugal',      n:2106925, src:'OECD/FRED 2024'},
+    {label:'↳ Urbanas (×66%)',                n:1390570, src:'Worldometer'},
+    {label:'↳ Classe média/alta (×45%)',      n:625757,  src:'estimativa'},
+    {label:'↳ Compram online (×64%)',         n:400484,  src:'CTT/Minerva 2025'},
+    {label:'↳ Consomem suplementos (×26,8%)',n:107330,  src:'INSA/NLM'},
+  ]},
+  ib:{steps:[
+    {label:'Mulheres 25–54 em PT+ES',         n:12106925,src:'OECD + ONU WPP 2024'},
+    {label:'↳ Urbanas (avg 76%)',             n:9190570, src:'Worldometer'},
+    {label:'↳ Classe média/alta (~44%)',      n:4043851, src:'estimativa'},
+    {label:'↳ Compram online (avg 60%)',      n:2426311, src:'CTT + INE Espanha'},
+    {label:'↳ Consomem suplementos (~29%)',   n:708755,  src:'INSA + estimativa ES'},
+  ]},
+  eu:{steps:[
+    {label:'Mulheres 25–54 (9 países europeus)',n:80400000,src:'ONU WPP 2024 / Eurostat'},
+    {label:'↳ Urbanas (avg 82%)',             n:65928000, src:'Worldometer / ONU'},
+    {label:'↳ Classe média/alta (avg 50%)',   n:32964000, src:'estimativa Eurostat'},
+    {label:'↳ Compram online (avg 80%)',      n:26371200, src:'Eurostat e-commerce 2025'},
+    {label:'↳ Consomem suplementos (avg 30%)',n:7985000,  src:'estimativa por país'},
+  ]},
+};
+const FCOL=[G,G2,G3,'#7ABCA0',AU];
+
+function renderFunnel(key){
+  const f=FUNNELS[key];
+  const base=f.steps[0].n;
+  let html='';
+  f.steps.forEach((row,i)=>{
+    const pct=(row.n/base*100).toFixed(1);
+    const w=row.n/base*100;
+    const fmt=n=>n>=1e6?(n/1e6).toFixed(1).replace('.',',')+' M':n.toLocaleString('pt-PT');
+    html+=`<div class="funnel-row">
+      <div class="f-lbl"><span>${row.label}</span><span class="f-n" style="color:${FCOL[i]}">${fmt(row.n)}</span></div>
+      <div class="f-track"><div class="f-bar" style="width:${w}%;background:${FCOL[i]}">${pct}%</div></div>
+    </div>`;
+  });
+  const last=f.steps[f.steps.length-1];
+  const som=(last.n*0.025*40*2.5/1e6).toFixed(2).replace('.',',');
+  const fmt2=n=>n>=1e6?(n/1e6).toFixed(1).replace('.',',')+' M':n.toLocaleString('pt-PT');
+  html+=`<p class="f-note">ICP: <strong>${fmt2(last.n)} consumidoras-alvo</strong> · SOM 2,5%: <strong>~${(last.n*0.025).toLocaleString('pt-PT')} clientes</strong> · Faturamento: <strong>${som} M€/ano</strong><br>Fontes: ${[...new Set(f.steps.map(s=>s.src))].join(' · ')}</p>`;
+  document.getElementById('funnel-body').innerHTML=html;
+}
+window.setFunnel=(key,el)=>{document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderFunnel(key)};
+renderFunnel('pt');
+
+// ── European market bar ──────────────────────────────────────────────────
+new Chart(document.getElementById('c-europe'),{
+  type:'bar',
+  data:{
+    labels:['Itália','Alemanha','Reino Unido','França','Espanha','Nórdicos (×4)','Países Baixos','BE+AT+CH','Europa Leste','Portugal'],
+    datasets:[{label:'TAM 2024 (M€)',data:[4500,4800,4400,2900,1700,2000,1400,1500,1500,647],
+      backgroundColor:[G,G,G,G,AU,G2,G2,G2,G2,AU],borderRadius:5,borderSkipped:false}]
+  },
+  options:{
+    indexAxis:'y',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw.toLocaleString('pt-PT')} M€`}}},
+    scales:{
+      x:{grid:{color:'#EEF2EF'},ticks:{callback:v=>v>=1000?`${v/1000}k M€`:`${v} M€`}},
+      y:{grid:{display:false},ticks:{font:{size:11}}}
+    },
+    animation:{duration:900},maintainAspectRatio:false,
+  }
+});
+
+// ── SOM Stacked bar (accumulative) ───────────────────────────────────────
+// SOM 2.5%: PT=267k, ES-add=1503k, EU-rest=18180k
+new Chart(document.getElementById('c-som-stacked'),{
+  type:'bar',
+  data:{
+    labels:['🇵🇹 Portugal\n(só PT)','🇵🇹🇪🇸 Ibéria\n(PT+ES)','🌍 Europa Completa\n(todos os mercados)'],
+    datasets:[
+      {label:'Portugal (2,5% × 10,7 M€ SAM)',data:[0.267,0.267,0.267],backgroundColor:G,borderRadius:4,stack:'s'},
+      {label:'Espanha adicional (2,5% × 60,1 M€ SAM)',data:[0,1.503,1.503],backgroundColor:AU,stack:'s'},
+      {label:'Europa restante adicional (2,5% × 727 M€ SAM)',data:[0,0,18.18],backgroundColor:G3,stack:'s'},
+    ]
+  },
+  options:{
+    plugins:{
+      legend:{position:'top',labels:{usePointStyle:true,pointStyle:'rect',padding:14,font:{size:11}}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label.split('(')[0].trim()}: ${c.raw.toFixed(3).replace('.',',')} M€`}}
+    },
+    scales:{
+      y:{stacked:true,grid:{color:'#EEF2EF'},ticks:{callback:v=>v>=1?`${v} M€`:`${(v*1000).toFixed(0)} k€`}},
+      x:{stacked:true,grid:{display:false}}
+    },
+    animation:{duration:900},maintainAspectRatio:false,
+  }
+});
+
+// ── SOM range (0.5% to 5%) per market ───────────────────────────────────
+new Chart(document.getElementById('c-som-range'),{
+  type:'bar',
+  data:{
+    labels:['0,5%','1%','2,5% ★','5%'],
+    datasets:[
+      {label:'Portugal (M€)',data:[0.054,0.107,0.267,0.537],
+        backgroundColor:ctx=>ctx.dataIndex===2?G:'rgba(46,94,78,.30)',borderRadius:5,borderSkipped:false},
+      {label:'Ibéria PT+ES (M€)',data:[0.355,0.709,1.773,3.545],
+        backgroundColor:ctx=>ctx.dataIndex===2?AU:'rgba(201,162,39,.30)',borderRadius:5,borderSkipped:false},
+      {label:'Europa Completa (M€)',data:[3.99,7.98,19.95,39.9],
+        backgroundColor:ctx=>ctx.dataIndex===2?G3:'rgba(90,158,126,.30)',borderRadius:5,borderSkipped:false},
+    ]
+  },
+  options:{
+    plugins:{
+      legend:{position:'top',labels:{usePointStyle:true,pointStyle:'rect',padding:12,font:{size:11}}},
+      tooltip:{callbacks:{label:c=>{
+        const v=c.raw;
+        return ` ${c.dataset.label.split(' (')[0]}: ${v>=1?v.toFixed(2).replace('.',',')+'  M€':(v*1000).toFixed(0)+' k€'}`;
+      }}}
+    },
+    scales:{
+      y:{grid:{color:'#EEF2EF'},ticks:{callback:v=>v>=1?`${v} M€`:`${(v*1000).toFixed(0)} k€`}},
+      x:{grid:{display:false}}
+    },
+    animation:{duration:900},maintainAspectRatio:false,
+  }
+});
+
+// ── Price sensitivity ─────────────────────────────────────────────────────
+new Chart(document.getElementById('c-price'),{
+  type:'bar',
+  data:{
+    labels:['55€','47€','40€\n(base)','32€','28€','24€\n(≈ Frederica)','20€'],
+    datasets:[
+      {type:'bar',label:'Público alcançável (mil mulheres) — Portugal',
+        data:[71.6,90.6,107.3,138.3,157.4,176.5,195.6],
+        backgroundColor:ctx=>ctx.dataIndex===2?G:'rgba(46,94,78,.22)',
+        borderColor:G,borderWidth:ctx=>ctx.dataIndex===2?0:1.5,
+        borderRadius:5,yAxisID:'yL'},
+      {type:'line',label:'SAM potencial (M€) — Portugal',
+        data:[6.1,7.6,8.6,9.9,10.4,10.5,10.2],
+        borderColor:AU,backgroundColor:'rgba(201,162,39,.1)',
+        borderWidth:2.5,pointRadius:5,
+        pointBackgroundColor:ctx=>ctx.dataIndex===5?'#B22222':AU,
+        pointBorderColor:'#fff',pointBorderWidth:2,
+        tension:0.4,fill:true,yAxisID:'yR'},
+    ]
+  },
+  options:{
+    plugins:{
+      legend:{position:'top',labels:{usePointStyle:true,padding:14,font:{size:11}}},
+      tooltip:{mode:'index',intersect:false},
+    },
+    scales:{
+      yL:{position:'left',grid:{color:'#EEF2EF'},
+        title:{display:true,text:'Público alcançável (mil mulheres)',font:{size:10}},
+        ticks:{callback:v=>`${v}k`}},
+      yR:{position:'right',grid:{display:false},
+        title:{display:true,text:'SAM potencial (M€)',font:{size:10}},
+        ticks:{callback:v=>`${v} M€`}},
+      x:{grid:{display:false}}
+    },
+    animation:{duration:900},maintainAspectRatio:false,
+  }
+});
+</script>
+</body>
+</html>
