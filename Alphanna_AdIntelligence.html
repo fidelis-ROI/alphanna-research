@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alphanna — Inteligência de Criativos Meta Ads</title>
+<style>
+  :root {
+    --dark-green: #1A3C34;
+    --mid-green: #2D6A4F;
+    --light-green: #D8F3DC;
+    --gold: #B8860B;
+    --gold-light: #FFF9E6;
+    --text: #1a1a1a;
+    --text-soft: #555;
+    --border: #e0e0e0;
+    --bg: #f9f9f7;
+    --white: #ffffff;
+    --red: #c0392b;
+    --amber: #e67e22;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+  header { background: var(--dark-green); color: white; padding: 32px 40px; }
+  header h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.03em; }
+  header p { margin-top: 6px; font-size: 13px; opacity: 0.75; }
+  .nota-metodologica { background: #fff8e1; border-left: 4px solid var(--gold); padding: 14px 20px; margin: 24px 40px 0; border-radius: 4px; font-size: 13px; color: #665500; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 40px 60px; }
+  h2 { font-size: 17px; color: var(--dark-green); font-weight: 700; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--light-green); }
+  h3 { font-size: 15px; font-weight: 700; color: var(--dark-green); margin-bottom: 10px; }
+
+  /* ÂNGULOS DOMINANTES */
+  .angles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; margin-bottom: 40px; }
+  .angle-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; position: relative; }
+  .angle-card.hot { border-left: 4px solid var(--red); }
+  .angle-card.warm { border-left: 4px solid var(--amber); }
+  .angle-card.default { border-left: 4px solid var(--mid-green); }
+  .angle-title { font-size: 14px; font-weight: 700; color: var(--dark-green); margin-bottom: 6px; }
+  .angle-heat { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; display: inline-block; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; }
+  .heat-high { background: #fde8e8; color: var(--red); }
+  .heat-med { background: #fef3e2; color: var(--amber); }
+  .heat-emerging { background: var(--light-green); color: var(--mid-green); }
+  .angle-brands { font-size: 12px; color: var(--text-soft); margin-bottom: 6px; }
+  .angle-insight { font-size: 13px; color: var(--text); }
+
+  /* BRAND CARDS */
+  .brand-section { margin-bottom: 40px; }
+  .brand-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .brand-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 12px; white-space: nowrap; }
+  .tag-pt { background: #e8f4fd; color: #1a6698; }
+  .tag-uk { background: #eaf5ea; color: #237a3c; }
+  .tag-de { background: #f0f0f8; color: #3a3a8c; }
+  .tag-eu { background: #f5f0ff; color: #5a2d82; }
+  .tag-alphanna { background: var(--gold-light); color: var(--gold); border: 1px solid var(--gold); }
+  .brand-name { font-size: 18px; font-weight: 800; color: var(--dark-green); }
+  .brand-sub { font-size: 12px; color: var(--text-soft); }
+  .creatives-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+  @media (max-width: 700px) { .creatives-grid { grid-template-columns: 1fr; } }
+  .creative-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+  .creative-num { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 8px; }
+  .creative-angle-pill { display: inline-block; font-size: 11px; font-weight: 700; background: var(--light-green); color: var(--mid-green); padding: 2px 10px; border-radius: 10px; margin-bottom: 10px; }
+  .creative-format { display: inline-block; font-size: 11px; background: #f0f0f0; color: #555; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+  .creative-headline { font-size: 14px; font-weight: 700; color: var(--dark-green); margin-bottom: 8px; font-style: italic; }
+  .creative-desc { font-size: 13px; color: var(--text); margin-bottom: 10px; }
+  .creative-hook { font-size: 12px; background: #f7f7f2; border-left: 3px solid var(--gold); padding: 8px 12px; border-radius: 0 4px 4px 0; color: #444; }
+  .brand-insight-bar { background: var(--gold-light); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #554400; border: 1px solid #e8d88a; }
+  .brand-insight-bar strong { color: var(--dark-green); }
+
+  /* STRATEGIC SUMMARY */
+  .strategy-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 30px; }
+  .strategy-table th { background: var(--dark-green); color: white; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 600; }
+  .strategy-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .strategy-table tr:nth-child(even) td { background: #f4f8f5; }
+  .strategy-table tr.alphanna-row td { background: var(--gold-light); font-weight: 600; }
+  .pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin: 2px; }
+  .pill-green { background: #d4edda; color: #155724; }
+  .pill-red { background: #f8d7da; color: #721c24; }
+  .pill-yellow { background: #fff3cd; color: #856404; }
+
+  /* GAPS */
+  .gaps-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 30px; }
+  @media (max-width: 800px) { .gaps-grid { grid-template-columns: 1fr; } }
+  .gap-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .gap-card h4 { font-size: 13px; font-weight: 700; color: var(--dark-green); margin-bottom: 8px; }
+  .gap-card p { font-size: 12px; color: var(--text-soft); }
+  .gap-card.opportunity { border-top: 3px solid var(--mid-green); }
+  .gap-card.risk { border-top: 3px solid var(--red); }
+  .gap-card.action { border-top: 3px solid var(--gold); }
+
+  footer { background: var(--dark-green); color: rgba(255,255,255,0.6); text-align: center; padding: 18px; font-size: 12px; }
+
+  .section-divider { margin: 40px 0 30px; }
+  .toc { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; margin-bottom: 32px; }
+  .toc a { color: var(--mid-green); text-decoration: none; font-size: 13px; display: block; padding: 3px 0; }
+  .toc a:hover { text-decoration: underline; }
+  .toc-group { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-soft); margin: 10px 0 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Alphanna — Inteligência de Criativos & Ângulos Meta Ads</h1>
+  <p>Análise de Criativos Competitivos · 12 Marcas Benchmark · Junho 2026</p>
+</header>
+
+<div class="nota-metodologica">
+  <strong>Nota metodológica:</strong> A Meta Ad Library é renderizada via JavaScript e inacessível via extração automatizada. Esta análise foi construída a partir de: (1) conteúdo das homepages e campanhas ativas de cada marca; (2) case studies públicos documentados (Wild Nutrition, Absolute Collagen TV ad, CGI Absolute); (3) padrões de performance publicados para suplementos femininos (análise de 500+ anúncios, Evolut Agency 2025). Os "criativos de referência" descrevem o formato e ângulo dos anúncios ativos de cada marca, não transcrições literais.
+</div>
+
+<div class="container">
+
+  <div class="toc">
+    <div class="toc-group">Índice</div>
+    <a href="#angles">1. Ângulos Dominantes (análise cross-brand)</a>
+    <a href="#brands">2. Análise por Marca (2 criativos de referência)</a>
+    <a href="#summary">3. Matriz Comparativa de Ângulos</a>
+    <a href="#gaps">4. Gaps e Oportunidades para Alphanna</a>
+  </div>
+
+  <!-- SECÇÃO 1: ÂNGULOS DOMINANTES -->
+  <h2 id="angles">1. Ângulos Dominantes — Análise Cross-Brand</h2>
+  <p style="margin-bottom:18px; color: var(--text-soft); font-size: 13px;">Ângulos usados por múltiplas marcas ao mesmo tempo = sinal de que convertem. Os de "frequência alta" devem ser priorizados como referência criativa para Alphanna.</p>
+
+  <div class="angles-grid">
+
+    <div class="angle-card hot">
+      <div class="angle-heat heat-high">🔴 Frequência Alta</div>
+      <div class="angle-title">Antes &amp; Depois (Skin/Hair Transformation)</div>
+      <div class="angle-brands">Usado por: Revive Collagen, Absolute Collagen, Zooki, Gold Collagen</div>
+      <div class="angle-insight">O ângulo mais replicado na categoria. Mostra fotos reais de clientes com resultados visíveis em pele e cabelo (30–90 dias). Dispara desejo imediato e validação de eficácia sem depender de linguagem técnica. <strong>Para colágeno/beleza é o criativo default que funciona.</strong></div>
+    </div>
+
+    <div class="angle-card hot">
+      <div class="angle-heat heat-high">🔴 Frequência Alta</div>
+      <div class="angle-title">Testemunho UGC / "Mulher Real"</div>
+      <div class="angle-brands">Usado por: Revive, Zooki, Auri Foods, Absolute Collagen, Alphanna, Her.one</div>
+      <div class="angle-insight">Vídeo ou imagem de cliente real (não modelo) partilhando resultado específico. O formato mais comum porque "não parece anúncio". Deve incluir detalhe concreto ("meu cabelo ficou mais espesso em 6 semanas") — genérico não converte.</div>
+    </div>
+
+    <div class="angle-card hot">
+      <div class="angle-heat heat-high">🔴 Frequência Alta</div>
+      <div class="angle-title">Superioridade de Absorção (Liquid vs Cápsula)</div>
+      <div class="angle-brands">Usado por: Revive Collagen (90–95% vs 30–40%), Zooki (4× liposomal), Gold Collagen</div>
+      <div class="angle-insight">Claim técnico que justifica o preço premium sem precisar de celebridade ou UGC. Funciona bem em imagem estática com infográfico simples. Revive usa "90% absorption" como hook central em múltiplos formatos. <strong>Ângulo de diferenciação — a cópia implica que está a funcionar.</strong></div>
+    </div>
+
+    <div class="angle-card warm">
+      <div class="angle-heat heat-med">🟠 Frequência Média</div>
+      <div class="angle-title">Celebridade / Embaixadora de Confiança</div>
+      <div class="angle-brands">Usado por: Revive Collagen (Mel B, Amanda Holden), Zooki (Rochelle), Her.one (VfL Wolfsburg)</div>
+      <div class="angle-insight">Acelera credibilidade e reach de topo de funil. Mas exige orçamento e gestão de direitos. Zooki usa aspas de celebridades sem depender de exclusividade. Para marcas menores, macro-influencer regional pode replicar o efeito.</div>
+    </div>
+
+    <div class="angle-card warm">
+      <div class="angle-heat heat-med">🟠 Frequência Média</div>
+      <div class="angle-title">Validação por Especialista (Nutricionista / Médico)</div>
+      <div class="angle-brands">Usado por: Artah (10+ experts), Her.one (nutritionist team), Auri Foods, Wild Nutrition</div>
+      <div class="angle-insight">Imagem ou vídeo curto de profissional de saúde a endorsar. Funciona bem para mercados mais exigentes ou ao escalar para retargeting. Auri usa nutricionistas portuguesas conhecidas (Joana Machado, Ana Afonso Martins) — formato muito acessível para Alphanna replicar no mercado PT.</div>
+    </div>
+
+    <div class="angle-card warm">
+      <div class="angle-heat heat-med">🟠 Frequência Média</div>
+      <div class="angle-title">Problema por Fase de Vida da Mulher</div>
+      <div class="angle-brands">Usado por: Revive (menopausa, peri-menopausa, beauty sleep), Her.one (PMS, ciclo), Artah (midlife metabolism)</div>
+      <div class="angle-insight">Anúncio segmentado para momento de vida específico: menopausa, pós-parto, 30s/40s, cansaço crónico. Hook: "Se tens [X anos] e sentes [problema específico]..." Muito alto em relevância percebida → CTR elevado. Opportunity para Alphanna dado foco no nicho feminino.</div>
+    </div>
+
+    <div class="angle-card warm">
+      <div class="angle-heat heat-med">🟠 Frequência Média</div>
+      <div class="angle-title">Fundadora / Origem da Marca (Founder Story)</div>
+      <div class="angle-brands">Usado por: Her.one (Chanyu Xu — "fui eu que criei porque precisava"), Artah (Rhian Stephenson ND), Wild Nutrition</div>
+      <div class="angle-insight">Vídeo curto da fundadora a contar o porquê. Gera confiança e diferenciação emocional que produto puro não consegue. Funciona especialmente em CPC frio. Alta escalabilidade: um criativo aguenta muito tempo sem fatigue.</div>
+    </div>
+
+    <div class="angle-card default">
+      <div class="angle-heat heat-emerging">🟢 Emergente</div>
+      <div class="angle-title">Rotina Diária / "Daily Ritual" Lifestyle</div>
+      <div class="angle-brands">Usado por: Her.one ("tasty everyday wellness"), Zooki, Artah, Revive</div>
+      <div class="angle-insight">Mostra o produto integrado num momento de rotina (manhã, ginásio, trabalho). Sem afirmações clínicas — trabalha desejo aspiracional. Especialmente eficaz em Reels/Stories. Baixo custo de produção.</div>
+    </div>
+
+    <div class="angle-card default">
+      <div class="angle-heat heat-emerging">🟢 Emergente</div>
+      <div class="angle-title">Prova Social em Escala (Número de Clientes)</div>
+      <div class="angle-brands">Usado por: Zooki (31.696 reviews), Her.one (350k clientes), Revive ("1000s of happy customers")</div>
+      <div class="angle-insight">Headline com número grande de clientes satisfeitos. Funciona em estágio de bottom-funnel (retargeting de visitantes). Overlay em vídeo ou banner estático. Para Alphanna só quando base de clientes for suficiente para impressionar.</div>
+    </div>
+
+    <div class="angle-card default">
+      <div class="angle-heat heat-emerging">🟢 Emergente</div>
+      <div class="angle-title">Quiz / Personalização ("qual é o teu suplemento")</div>
+      <div class="angle-brands">Usado por: Her.one, Artah, Revive Collagen (quizzes ativos nos sites)</div>
+      <div class="angle-insight">CTA para quiz de diagnóstico. Altíssimo CTR porque promete personalização sem custo. Funciona como criativo de topo de funil que qualifica o lead antes de mandar para o produto. Ainda pouco usado em PT — janela de oportunidade aberta.</div>
+    </div>
+
+  </div>
+
+  <!-- SECÇÃO 2: ANÁLISE POR MARCA -->
+  <h2 id="brands">2. Análise por Marca — 2 Criativos de Referência</h2>
+
+  <!-- ALPHANNA -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-alphanna">★ Alphanna</span>
+      <div>
+        <div class="brand-name">Alphanna</div>
+        <div class="brand-sub">alphanna.com/pt · Portugal · Suplementos naturais femininos</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Testemunho UGC</span><span class="creative-format">Static / Reels</span>
+        <div class="creative-headline">"Depois de 3 semanas com o Péptido da Beleza — as minhas unhas nunca estiveram assim."</div>
+        <div class="creative-desc">Cliente portuguesa (25–40 anos) mostrando mãos com unhas visivelmente mais fortes. Copy simples, imagem próxima. Sem modelo — foto real de cliente do DMs ou avaliação.</div>
+        <div class="creative-hook">Hook captivo: detalhe específico de resultado (unhas, cabelo, energia) + prazo realista (3–6 semanas)</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Problema / Solução</span><span class="creative-format">Vídeo curto</span>
+        <div class="creative-headline">"Sentes-te sempre cansada? Pode ser falta de D3+K2 — aqui está o que mudou para mim."</div>
+        <div class="creative-desc">Vídeo de 15–30s com mulher a falar para câmara, casual (não estúdio). Explica sintoma, apresenta solução, mostra o produto.</div>
+        <div class="creative-hook">Hook captivo: identifica dor específica + oferece explicação simples + transforma em solução comprável</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Observação estratégica:</strong> Alphanna está ainda no estágio de construção de prova social. Prioridade imediata: começar a colecionar testemunhos com detalhes específicos ("meu cabelo cresceu X cm", "durmo melhor há 2 semanas") e transformá-los em criativos. Ângulo de diferenciação viável: suplemento natural português — proximidade e identificação que marcas UK não têm.</div>
+  </div>
+
+  <!-- FREDERICA -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-pt">PT</span>
+      <div>
+        <div class="brand-name">Frederica</div>
+        <div class="brand-sub">frederica.pt · Portugal · Gomas suplementos femininos · ~€2M+ revenue</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Produto / Sabor / Conveniência</span><span class="creative-format">Reels / UGC</span>
+        <div class="creative-headline">"As gomas que vais querer comer todos os dias ✨ Para ansiedade, cabelo e pele — numa só goma."</div>
+        <div class="creative-desc">Vídeo curto com gomas em primeiro plano (coloridas, apetitosas), mulher jovem a comer casualmente. Tom descontraído, não clínico. Forte apelo ao formato — "não parece suplemento".</div>
+        <div class="creative-hook">Hook captivo: o formato gummy reduz fricção de compra — o criativo vende a experiência sensorial antes do benefício funcional</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Antes &amp; Depois · Cabelo</span><span class="creative-format">Carrossel</span>
+        <div class="creative-headline">"2 meses a tomar as gomas Frederica para o cabelo — aqui está o resultado."</div>
+        <div class="creative-desc">Carrossel com foto 1 = antes (cabelo fino/com queda) e foto 2 = depois. Copy minimalista. Hashtags PT para alcance orgânico.</div>
+        <div class="creative-hook">Hook captivo: timeline específico ("2 meses") + prova visual direta — combina o ângulo de sabor com prova de resultado</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Frederica:</strong> Conveniência de formato (guma vs cápsula) combinada com resultado visual. Alta frequência de anúncios jovens e coloridos — posicionamento mais acessível que Alphanna. Principal risco para Alphanna: Frederica ocupa o espaço "suplemento feminino PT de referência" no awareness de mercado com campanha mais agressiva.</div>
+  </div>
+
+  <!-- AURI FOODS -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-pt">PT</span>
+      <div>
+        <div class="brand-name">Auri Foods</div>
+        <div class="brand-sub">aurifoods.pt · Portugal · Colagénio Verisol, proteínas, saúde feminina</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Endorso Especialista</span><span class="creative-format">Static + Quote</span>
+        <div class="creative-headline">"Como nutricionista, recomendo sempre a proteína da Auri — Joana Machado, Nutricionista"</div>
+        <div class="creative-desc">Foto de nutricionista reconhecida (Joana Machado, Ana Afonso Martins) com aspas de recomendação. Simples, credível, sem afirmações de saúde agressivas que possam ser rejeitadas pela Meta.</div>
+        <div class="creative-hook">Hook captivo: autoridade de terceiro não pago = confiança instantânea; "nutricionista recomenda" resolve objeção de credibilidade</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Resultado + Sabor</span><span class="creative-format">Reels / UGC</span>
+        <div class="creative-headline">"Auri devolveu-me qualidade de vida. Joelho sem dores em 2 dias de colagénio." — José S.</div>
+        <div class="creative-desc">Testemunho escrito convertido em vídeo UGC ou carrossel estático. A Auri usa testemunhos muito específicos com detalhes credíveis (dores no joelho, prazo exato). Associado ao sabor apelativo do produto.</div>
+        <div class="creative-hook">Hook captivo: especificidade extrema do resultado cria identificação imediata + prazo surpreendentemente rápido desafia crença e provoca curiosidade</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Auri:</strong> Nutricionista como validador externo + resultados concretos de clientes reais. Estratégia B2B2C inteligente: ao fazer nutricionistas parceiras, a Auri ganha reach orgânico via redes dessas profissionais. Modelo replicável para Alphanna com nutricionistas portuguesas independentes.</div>
+  </div>
+
+  <!-- GOLDNUTRITION -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-pt">PT</span>
+      <div>
+        <div class="brand-name">GoldNutrition</div>
+        <div class="brand-sub">goldnutrition.pt · Portugal · Nutrição desportiva + suplementação geral</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Performance Desportiva</span><span class="creative-format">Static / Vídeo</span>
+        <div class="creative-headline">"Treina mais. Recupera melhor. A nutrição que os atletas portugueses escolhem."</div>
+        <div class="creative-desc">Imagens de atletas em ação (ginásio, trail running, corrida). A GoldNutrition tem forte associação com desporto federado e patrocínios. Apelo a credenciais desportivas e origem portuguesa.</div>
+        <div class="creative-hook">Hook captivo: associação a atletas de elite como proxy de eficácia — "se funciona para eles, funciona para mim"</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Promoção / Pacote</span><span class="creative-format">Static promocional</span>
+        <div class="creative-headline">"Packs com desconto — suplementos para toda a família. Envio grátis hoje."</div>
+        <div class="creative-desc">Banners promocionais com múltiplos produtos, foco em valor e desconto. GoldNutrition é uma marca de volume — os criativos refletem modelo de margem baixa/volume alto, oposto ao premium positioning de Alphanna.</div>
+        <div class="creative-hook">Hook captivo: urgência de desconto + conveniência de pack — modelo transacional, não emocional</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante GoldNutrition:</strong> Volume, desporto e preço. Pouca sobreposição com o positioning de beleza e wellness premium da Alphanna. Risco baixo de competição direta de ângulo, mas ocupa espaço de awareness em PT para "suplementos portugueses de confiança".</div>
+  </div>
+
+  <!-- ABSOLUTE COLLAGEN -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-uk">UK</span>
+      <div>
+        <div class="brand-name">Absolute Collagen</div>
+        <div class="brand-sub">absolutecollagen.com · UK · Líder em colagénio líquido feminino</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Antes &amp; Depois · Subscriber Real</span><span class="creative-format">Vídeo / Carrossel</span>
+        <div class="creative-headline">"47 anos. Sentia-me insatisfeita com a minha pele e cabelo. Depois de Absolute Collagen:"</div>
+        <div class="creative-desc">Formato TV-style com clientes long-term subscribers (não modelos). Filma mulheres reais de 40–60+ anos com resultados visíveis. A campanha de TV foi construída exclusivamente com clientes, não contratadas. Extremamente credível.</div>
+        <div class="creative-hook">Hook captivo: especificidade etária ("47 anos") + auto-identificação com problema + cliffhanger visual — "e depois?"</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Metáfora Visual CGI</span><span class="creative-format">Vídeo / Brand awareness</span>
+        <div class="creative-headline">"Como o Anjo do Norte transformou a sua superfície enferrujada — a metáfora da regeneração da pele."</div>
+        <div class="creative-desc">Campanha CGI da Creative Social UK: a escultura "Angel of the North" (ícone britânico enferrujado) transforma a superfície oxidada em pele radiante. Metáfora visual sem texto. Alto impacto de awareness, diferenciação criativa total.</div>
+        <div class="creative-hook">Hook captivo: metáfora visual inesperada cria paragem no scroll imediata — não parece anúncio de suplemento; funciona como peça de arte/brand</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Absolute:</strong> Prova via cliente real + criatividade visual ousada. O modelo de "subscriber community" cria um pipeline infinito de UGC credível. Para Alphanna: o modelo de recrutar clientes satisfeitos para participar em conteúdo é de custo baixíssimo e alto impacto.</div>
+  </div>
+
+  <!-- REVIVE COLLAGEN -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-uk">UK</span>
+      <div>
+        <div class="brand-name">Revive Collagen</div>
+        <div class="brand-sub">revivecollagen.com · UK · Premium liquid marine collagen · Ambassadors: Mel B, Amanda Holden</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Absorção Superior + Antes/Depois</span><span class="creative-format">Carrossel estático</span>
+        <div class="creative-headline">"90–95% de absorção vs 30–40% dos comprimidos. Isto é colagénio que realmente funciona."</div>
+        <div class="creative-desc">Infográfico comparativo simples: sachet líquido vs comprimido, com percentagens de absorção. Seguido de slides com fotos de antes/depois de pele e cabelo de clientes reais. Combinação de evidência técnica + prova visual.</div>
+        <div class="creative-hook">Hook captivo: claim numérico concreto destrói crença de que "todos os colagénios são iguais" — cria urgência de upgrade</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Celebridade + Menopausa</span><span class="creative-format">Vídeo / PR mashup</span>
+        <div class="creative-headline">"Mel B junta-se à Revive Collagen — a nova voz poderosa da menopausa."</div>
+        <div class="creative-desc">Vídeo com Mel B (ex-Spice Girl) falando abertamente sobre menopausa e como o produto faz parte da rotina dela. Combina celebrity reach com taboo breaking (menopausa ainda tabu em muitos mercados). Targeting: mulheres 45–58.</div>
+        <div class="creative-hook">Hook captivo: celebridade conhecida + tema emocional (menopausa) que a mulher-alvo não vê representado normalmente em publicidade</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Revive:</strong> Combinação de claim técnico (absorção) + prova real + embaixadoras com autoridade sobre vida stages. A menopausa como ângulo é ainda quase completamente ausente no mercado PT — oportunidade de diferenciação para Alphanna.</div>
+  </div>
+
+  <!-- WILD NUTRITION -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-uk">UK</span>
+      <div>
+        <div class="brand-name">Wild Nutrition</div>
+        <div class="brand-sub">wildnutrition.com · UK · Food-Grown® supplements, female health focus</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Filosofia / Diferenciação de Ingredientes</span><span class="creative-format">Vídeo brand</span>
+        <div class="creative-headline">"Não inventámos suplementos. Reinventámos a forma como os nutrientes chegam ao teu corpo — Food-Grown."</div>
+        <div class="creative-desc">Vídeo de campanha brand com natureza, mulheres em diferentes estágios de vida, imagens de alimentos reais transformados em suplemento. Foco na filosofia Food-Grown como diferenciador total — "o teu corpo reconhece e absorve melhor".</div>
+        <div class="creative-hook">Hook captivo: reframe completo da categoria — "outros suplementos não são como nós" sem atacar directamente concorrentes</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Influencer UGC em Escala</span><span class="creative-format">Reels / Stories</span>
+        <div class="creative-headline">"A minha rotina de hormonal health — o que tomo e porquê [Wild Nutrition parceria]"</div>
+        <div class="creative-desc">UGC de influencers de wellness (micro/macro) integrando Wild Nutrition na rotina de manhã. Com código de desconto único por influencer para tracking. 186 influencers activos, 1,376 peças de conteúdo documentadas. Estratégia de volume.</div>
+        <div class="creative-hook">Hook captivo: influencer parece estar a partilhar rotina pessoal — recomendação peer-to-peer que contorna defesa publicitária do consumidor</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Wild Nutrition:</strong> Filosofia de ingredientes como moat competitivo + influencer network como motor de conteúdo. Para Alphanna: a filosofia "natural, português, de dentro para fora" pode ser um equivalente local do Food-Grown — precisa de ser articulada como sistema de crença, não apenas como lista de ingredientes.</div>
+  </div>
+
+  <!-- GOLD COLLAGEN -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-eu">IT / PT</span>
+      <div>
+        <div class="brand-name">Gold Collagen</div>
+        <div class="brand-sub">goldcollagen.com · Minerva Research Labs · Líquido, shots diários · Farmácias PT</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Clínico / "Clinicamente Testado"</span><span class="creative-format">Static / Print</span>
+        <div class="creative-headline">"Clinicamente testado. Formulado por cientistas. O shot de colagénio que a pele precisa."</div>
+        <div class="creative-desc">Imagery farmacêutica — fundo branco, produto em destaque, selos de certificação, referências a estudos clínicos. Tom sóbrio e credível. Distribuído em farmácias PT — os anúncios reforçam o positioning de parafarmácia premium.</div>
+        <div class="creative-hook">Hook captivo: claim clínico funciona como trust signal máximo para consumidor que está activamente a pesquisar e comparar marcas</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Ritual Diário Premium</span><span class="creative-format">Lifestyle photo</span>
+        <div class="creative-headline">"Um shot por dia. Resultados visíveis em 4 semanas. O ritual de beleza que começou por dentro."</div>
+        <div class="creative-desc">Flatlay ou lifestyle photo com o frasco dourado, espelho, perfume, produtos de skincare. Associa o produto ao ritual de beleza de luxo. Apelo a mulher que já gasta em skincare premium e está pronta para "inside-out".</div>
+        <div class="creative-hook">Hook captivo: prazo específico ("4 semanas") + associação a ritual existente reduz fricção de adopção — "só substituí uma coisa da rotina"</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Gold Collagen:</strong> Credibilidade clínica + ritual premium. Presença em farmácias dá legitimidade que marcas D2C puras não têm. Para Alphanna: se a estratégia de distribuição vier a incluir farmácias, os criativos de Gold Collagen são a referência de tone-of-voice.</div>
+  </div>
+
+  <!-- HEIGHTS -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-uk">UK</span>
+      <div>
+        <div class="brand-name">Heights</div>
+        <div class="brand-sub">youareheights.com · UK · Brain health, nootropics, subscription DTC</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Problema Cognitivo / Brain Fog</span><span class="creative-format">Vídeo / Editorial</span>
+        <div class="creative-headline">"E se o teu 'cansaço crónico' não fosse falta de sono — mas falta de nutrição para o cérebro?"</div>
+        <div class="creative-desc">Hook em texto ou voz-off que reframes um sintoma comum (brain fog, falta de foco) como problema nutricional tratável. Heights é conhecida por abordagem editorial e educativa — mais parecida com media brand do que com suplemento.</div>
+        <div class="creative-hook">Hook captivo: reframe de crença ("eu pensava que era X mas é Y") — pausa o scroll porque contradiz o que o consumidor já acredita</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Assinatura / "Sem Esforço"</span><span class="creative-format">Lifestyle + CTA</span>
+        <div class="creative-headline">"O único suplemento que precisas. Formulado por neurocientistas. Entregue mensalmente."</div>
+        <div class="creative-desc">Posicionamento de "stack completo" — não precisas de comprar 10 suplementos diferentes. Forte CTA para assinatura (subscription) com foco na conveniência e poupança vs individual. Targeting: profissionais 28–42 anos.</div>
+        <div class="creative-hook">Hook captivo: simplificação radical — "tens demasiados suplementos, nós resolvemos isso" endereça fadiga de decisão do consumidor informado</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Heights:</strong> Educação + simplificação radical + modelo de assinatura como produto em si. Pouca sobreposição com o positioning de beleza/energia de Alphanna — mas o modelo de assinatura e o ângulo de "brain fog / cansaço crónico" são replicáveis no mercado PT onde a categoria nootropics é quase inexistente.</div>
+  </div>
+
+  <!-- ZOOKI -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-uk">UK</span>
+      <div>
+        <div class="brand-name">Zooki</div>
+        <div class="brand-sub">zooki.com · UK · Liposomal collagen + supplements · 31,696 reviews · Holland &amp; Barrett, Harrods</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Absorção Liposomal + "Feel Fast"</span><span class="creative-format">Static + Infográfico</span>
+        <div class="creative-headline">"4× mais absorção que suplementos normais. Sente a diferença em dias — não meses."</div>
+        <div class="creative-desc">Infográfico científico simples mostrando mecanismo liposomal. Seguido de aspas de media de prestígio: "absorption is optimised" (Forbes), "Recommended by the pharmacists to the Royal Family" (Tatler). Combina ciência com social proof de elite.</div>
+        <div class="creative-hook">Hook captivo: promessa de velocidade de resultado ("dias, não meses") + validação de fonte inesperada (farmacêuticos da Família Real)</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Celebridade Atleta + Produto Premium</span><span class="creative-format">Vídeo / Quote card</span>
+        <div class="creative-headline">"Sabia que precisava de electrólitos para escalar o Everest — mas só os melhores serviam. Escolhi Zooki." — Mitch Hutchcraft</div>
+        <div class="creative-desc">Imagem de atleta extremo (escalada Everest) com aspas sobre o produto. Associa Zooki a performance de elite sem ser um produto de sports nutrition. Funciona como "halo de credibilidade" para o consumidor de wellness comum.</div>
+        <div class="creative-hook">Hook captivo: contexto extremo (Everest) cria contraste com uso quotidiano — "se serve para o Everest, certamente serve para o meu ginásio"</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Zooki:</strong> Ciência de absorção + social proof de escala + elite endorsement. O playbook Zooki é o mais replicável para uma marca PT em fase de crescimento: começa com claim técnico simples, adiciona reviews reais, depois adiciona endorsers progressivamente mais credíveis.</div>
+  </div>
+
+  <!-- ARTAH -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-uk">UK</span>
+      <div>
+        <div class="brand-name">Artah</div>
+        <div class="brand-sub">artah.co · UK · Science-backed systems, metabolic &amp; gut health, female focus</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Expert Endorsement em Série</span><span class="creative-format">Carrossel / Quote cards</span>
+        <div class="creative-headline">"10 especialistas de saúde. Todos escolhem Artah. Aqui está o porquê de cada um."</div>
+        <div class="creative-desc">Série de cards com foto de cada profissional (nutricionista, GP, naturopata), o produto que escolheu e o motivo específico. Artah lista 10+ especialistas nomeados com credenciais. Cada card é um anúncio autónomo também.</div>
+        <div class="creative-hook">Hook captivo: diversidade de especialistas cria sensação de consenso científico — não é uma opinião, é o campo todo a convergir</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Fase de Vida · Metabolismo Midlife</span><span class="creative-format">Vídeo editorial</span>
+        <div class="creative-headline">"Por que razão o teu corpo nos 30s e 40s se comporta de forma diferente — e o que podes fazer."</div>
+        <div class="creative-desc">Artigo de blog convertido em vídeo de 30–60s. Explica a mudança metabólica na midlife de forma educativa, sem alarmismo. Termina com CTA suave para Metabolic Fix ou Cellular Hydration. Tom de "brand que educa, não vende".</div>
+        <div class="creative-hook">Hook captivo: explica fenómeno que a consumidora já experiencia mas não sabe nomear — "finalmente alguém explica porque me sinto assim"</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Artah:</strong> Educar primeiro, vender segundo. O contínuo de conteúdo editorial (Journal, The Metabolic Reset programme) posiciona Artah como autoridade da categoria antes de ser produto. O criativo não parece publicidade — parece conteúdo de valor genuíno. Modelo aspiracional para Alphanna a 12–24 meses.</div>
+  </div>
+
+  <!-- HER.ONE -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <span class="brand-tag tag-de">DE</span>
+      <div>
+        <div class="brand-name">Her.one</div>
+        <div class="brand-sub">her.one · Alemanha · Female health all-in-one · 350,000+ clientes · Made in Germany</div>
+      </div>
+    </div>
+    <div class="creatives-grid">
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #1</div>
+        <span class="creative-angle-pill">Fundadora / "Criei porque precisava"</span><span class="creative-format">Vídeo UGC founder</span>
+        <div class="creative-headline">"Como mulher, dava tudo — ao trabalho, à família. Mas ignorava as minhas próprias necessidades. Até criar Her.one."</div>
+        <div class="creative-desc">Vídeo da fundadora Chanyu Xu a falar directamente para câmara, casual, em casa ou escritório. Conta a história de origem da marca com vulnerabilidade real. Sem edição pesada. Altíssima autenticidade percebida.</div>
+        <div class="creative-hook">Hook captivo: "eu criei porque eu mesma precisava" é o trust statement mais forte possível — elimina suspeita de motivação puramente comercial</div>
+      </div>
+      <div class="creative-card">
+        <div class="creative-num">Criativo de Referência #2</div>
+        <span class="creative-angle-pill">Conveniência All-in-One + Gosto</span><span class="creative-format">Reels / Product demo</span>
+        <div class="creative-headline">"Um drink. Tudo dentro. INNER BEAUTY — colágeno, gut health, energia, beleza, tudo numa dose diária deliciosa."</div>
+        <div class="creative-desc">Vídeo de 15s a preparar o produto (sachet, água, shake), sabor pêssego visualmente apelativo. Sobreposição de texto listando benefícios. CTA para assinatura. Simples, directo, replicável em TikTok e Reels sem custo elevado.</div>
+        <div class="creative-hook">Hook captivo: promise de simplificação máxima ("um só produto") + apelo sensorial do sabor — combate objeção de "mais um suplemento na rotina"</div>
+      </div>
+    </div>
+    <div class="brand-insight-bar"><strong>Ângulo dominante Her.one:</strong> Fundadora autêntica + produto conveniente e saboroso + prova de escala (350k). O modelo Her.one é o mais directamente replicável para Alphanna — foco em mulheres, DTC, fórmulas all-in-one, founder-led content. A principal diferença: Her.one investe muito em expert validation (9+ profissionais no site). Para Alphanna, 2–3 nutricionistas portuguesas credíveis seria equivalente.</div>
+  </div>
+
+  <!-- SECÇÃO 3: MATRIZ COMPARATIVA -->
+  <h2 id="summary">3. Matriz Comparativa de Ângulos por Marca</h2>
+
+  <div style="overflow-x:auto; margin-bottom:30px;">
+  <table class="strategy-table">
+    <thead>
+      <tr>
+        <th>Marca</th>
+        <th>Antes/Depois</th>
+        <th>UGC / Testemunho</th>
+        <th>Absorção / Ciência</th>
+        <th>Celebridade</th>
+        <th>Especialista</th>
+        <th>Fase de Vida</th>
+        <th>Fundadora</th>
+        <th>All-in-One / Conv.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="alphanna-row">
+        <td><strong>★ Alphanna</strong></td>
+        <td><span class="pill pill-yellow">Potencial</span></td>
+        <td><span class="pill pill-green">Activo</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-yellow">Potencial</span></td>
+        <td><span class="pill pill-green">Kits activos</span></td>
+      </tr>
+      <tr>
+        <td>Frederica</td>
+        <td><span class="pill pill-green">Activo</span></td>
+        <td><span class="pill pill-green">Activo</span></td>
+        <td><span class="pill pill-red">N/A</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-green">Gummy format</span></td>
+      </tr>
+      <tr>
+        <td>Auri Foods</td>
+        <td><span class="pill pill-yellow">Potencial</span></td>
+        <td><span class="pill pill-green">Activo</span></td>
+        <td><span class="pill pill-yellow">Verisol claim</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-green">Nutricionistas PT</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+      </tr>
+      <tr>
+        <td>Absolute Collagen</td>
+        <td><span class="pill pill-green">Central</span></td>
+        <td><span class="pill pill-green">Subscriber UGC</span></td>
+        <td><span class="pill pill-yellow">Mencionado</span></td>
+        <td><span class="pill pill-yellow">Micro</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-green">Women 40+</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+      </tr>
+      <tr>
+        <td>Revive Collagen</td>
+        <td><span class="pill pill-green">Central</span></td>
+        <td><span class="pill pill-green">Activo</span></td>
+        <td><span class="pill pill-green">90% vs 30%</span></td>
+        <td><span class="pill pill-green">Mel B, A.Holden</span></td>
+        <td><span class="pill pill-yellow">Experts page</span></td>
+        <td><span class="pill pill-green">Menopausa</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-green">Range por concern</span></td>
+      </tr>
+      <tr>
+        <td>Wild Nutrition</td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-green">186 influencers</span></td>
+        <td><span class="pill pill-green">Food-Grown®</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-yellow">Naturopath</span></td>
+        <td><span class="pill pill-green">Life stages</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+      </tr>
+      <tr>
+        <td>Zooki</td>
+        <td><span class="pill pill-yellow">Presente</span></td>
+        <td><span class="pill pill-green">31k reviews</span></td>
+        <td><span class="pill pill-green">4× liposomal</span></td>
+        <td><span class="pill pill-green">Rochelle, atletas</span></td>
+        <td><span class="pill pill-yellow">Farmácia Real</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-yellow">Starter packs</span></td>
+      </tr>
+      <tr>
+        <td>Artah</td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-yellow">Reviews</span></td>
+        <td><span class="pill pill-green">Clinically shown</span></td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-green">10+ experts</span></td>
+        <td><span class="pill pill-green">Midlife 30s/40s</span></td>
+        <td><span class="pill pill-green">Rhian Stephenson ND</span></td>
+        <td><span class="pill pill-green">Systems approach</span></td>
+      </tr>
+      <tr>
+        <td>Her.one</td>
+        <td><span class="pill pill-red">Ausente</span></td>
+        <td><span class="pill pill-green">350k customers</span></td>
+        <td><span class="pill pill-yellow">Verisol</span></td>
+        <td><span class="pill pill-green">VfL Wolfsburg</span></td>
+        <td><span class="pill pill-green">9+ experts</span></td>
+        <td><span class="pill pill-green">Ciclo/PMS/Menopausa</span></td>
+        <td><span class="pill pill-green">Chanyu Xu</span></td>
+        <td><span class="pill pill-green">INNER BEAUTY AIO</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- SECÇÃO 4: GAPS E OPORTUNIDADES -->
+  <h2 id="gaps">4. Gaps e Oportunidades — O que Alphanna deve fazer a seguir</h2>
+
+  <div class="gaps-grid">
+    <div class="gap-card opportunity">
+      <h4>✅ Oportunidade Imediata: Nutricionistas Portuguesas</h4>
+      <p>Auri Foods já usa este modelo com sucesso. 2–3 nutricionistas PT credíveis a recomendar produtos específicos da Alphanna com razão concreta. Baixo custo, alto trust signal. Especialmente eficaz para Omega-3 e D3+K2.</p>
+    </div>
+    <div class="gap-card opportunity">
+      <h4>✅ Oportunidade Imediata: Antes &amp; Depois com Clientes Reais</h4>
+      <p>Revive e Absolute constroem os melhores anúncios com clientes que já existem. Pedir activamente fotos de antes/depois aos compradores do Péptido da Beleza e Kit Mitocondria. Até 3–4 resultados concretos bastam para começar.</p>
+    </div>
+    <div class="gap-card opportunity">
+      <h4>✅ Oportunidade: Fase de Vida Femimina (PT)</h4>
+      <p>Nenhuma marca portuguesa aborda menopausa, peri-menopausa ou ciclo hormonal em anúncios. Revive e Her.one mostram que este ângulo converte muito. Alphanna pode ser a primeira marca PT a ocupar este espaço — janela aberta agora.</p>
+    </div>
+    <div class="gap-card opportunity">
+      <h4>✅ Oportunidade: Fundadora Visível</h4>
+      <p>Her.one e Artah mostram que founder-content é o criativo com menor custo e maior longevidade. Um vídeo autêntico de 30–60s da fundadora da Alphanna a contar o porquê da marca pode ser o melhor criativo de topo de funil sem nenhum custo de produção.</p>
+    </div>
+    <div class="gap-card action">
+      <h4>🎯 Prioridade de Ângulo: Ângulo de Absorção</h4>
+      <p>Revive e Zooki usam o claim de absorção como diferenciador central. Se algum produto Alphanna usa formato ou ingrediente de absorção superior (ex: gotas vs cápsulas, fórmula lipossomal), este é o ângulo que justifica o preço premium sem testemunho.</p>
+    </div>
+    <div class="gap-card action">
+      <h4>🎯 Prioridade de Teste: Quiz de Diagnóstico</h4>
+      <p>Her.one, Artah e Revive usam quiz como criativo de topo de funil. CTR muito alto porque promete personalização. Para Alphanna: "Qual o suplemento certo para o teu objetivo? Faz o quiz em 1 minuto." Pode ser construído com Typeform ou ferramenta gratuita.</p>
+    </div>
+    <div class="gap-card risk">
+      <h4>⚠️ Risco: Frederica consolida o mercado PT primeiro</h4>
+      <p>Frederica tem ~€2M revenue, brand awareness PT e produto de formato mais conveniente (guma). Ao não investir em paid social agora, Alphanna cede espaço de awareness no mercado doméstico para uma marca concorrente directa com foco igual.</p>
+    </div>
+    <div class="gap-card risk">
+      <h4>⚠️ Risco: Claims sem prova = rejeição Meta</h4>
+      <p>Revive, Artah e Heights já foram ou podem ser alvo de ASA/ARPP por claims de saúde. Em PT, o compliance é menos estrito mas a Meta já recusa anúncios com claims diretos de cura/tratamento. A linguagem "apoia", "contribui para" e "promove" é mais segura que "trata" ou "elimina".</p>
+    </div>
+    <div class="gap-card risk">
+      <h4>⚠️ Gap: Escassez de Prova Social em Escala</h4>
+      <p>Zooki tem 31k reviews. Her.one tem 350k clientes. Alphanna ainda não comunica números de base de clientes. Construir o hábito de colecionar e exibir reviews desde agora é essencial — cada mês sem isso atrasa a data em que este ângulo fica disponível.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  Alphanna — Competitive Creative Intelligence · Elaborado com base em websites públicos, case studies documentados e padrões de performance do sector · Junho 2026
+</footer>
+
+</body>
+</html>
